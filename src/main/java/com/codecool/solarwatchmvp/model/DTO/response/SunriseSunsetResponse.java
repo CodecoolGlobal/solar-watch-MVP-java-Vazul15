@@ -1,8 +1,6 @@
-package com.codecool.solarwatchmvp.model;
+package com.codecool.solarwatchmvp.model.DTO.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import java.time.LocalTime;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record SunriseSunsetResponse(SunriseSunsetResults results) {}

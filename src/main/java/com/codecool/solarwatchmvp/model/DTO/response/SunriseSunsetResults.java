@@ -1,9 +1,8 @@
-package com.codecool.solarwatchmvp.model;
+package com.codecool.solarwatchmvp.model.DTO.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)

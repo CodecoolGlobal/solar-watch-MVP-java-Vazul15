@@ -1,4 +1,4 @@
-package com.codecool.solarwatchmvp.model;
+package com.codecool.solarwatchmvp.model.DTO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

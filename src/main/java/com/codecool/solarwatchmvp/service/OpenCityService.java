@@ -1,8 +1,9 @@
 package com.codecool.solarwatchmvp.service;
 
 import com.codecool.solarwatchmvp.exception.CityNotFoundException;
-import com.codecool.solarwatchmvp.model.City;
-import com.codecool.solarwatchmvp.model.CityReport;
+import com.codecool.solarwatchmvp.model.DTO.response.CityResponse;
+import com.codecool.solarwatchmvp.model.entity.City;
+import com.codecool.solarwatchmvp.model.DTO.CityReport;
 import com.codecool.solarwatchmvp.repository.CityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -71,5 +73,49 @@ public class OpenCityService {
                         throw new CityNotFoundException(errorMessage);
                     }
                 });
+    }
+
+    public CityReport updateCity(String cityName, City updatedCity) {
+        City existingCity = cityRepository.findByName(cityName)
+                .orElseThrow(() -> new RuntimeException("City not found"));
+
+        if (updatedCity.getName() != null) {
+            existingCity.setName(updatedCity.getName());
+        }
+        if (updatedCity.getCountry() != null) {
+            existingCity.setCountry(updatedCity.getCountry());
+        }
+        if (updatedCity.getState() != null) {
+            existingCity.setState(updatedCity.getState());
+        }
+        if (updatedCity.getLatitude() != 0) {
+            existingCity.setLatitude(updatedCity.getLatitude());
+        }
+        if (updatedCity.getLongitude() != 0) {
+            existingCity.setLongitude(updatedCity.getLongitude());
+        }
+
+        cityRepository.save(existingCity);
+
+        return new CityReport(existingCity.getName(),
+                existingCity.getLatitude(), existingCity.getLongitude(),
+                existingCity.getState(), existingCity.getCountry());
+    }
+
+    public void deleteCityByName(String cityName) {
+        City foundCity = cityRepository.findByName(cityName).orElseThrow(() -> new CityNotFoundException(cityName));
+        cityRepository.delete(foundCity);
+    }
+
+    public CityResponse createCity(City newCity) {
+        cityRepository.save(newCity);
+        return new CityResponse(newCity.getName());
+    }
+
+    public List<CityReport> findCitiesByNameContainingIgnoreCase(String name) {
+        return cityRepository.findCitiesByNameContainingIgnoreCase(name)
+                .stream()
+                .map(city -> new CityReport(city.getName(), city.getLatitude(), city.getLongitude(), city.getState(), city.getCountry()))
+                .toList();
     }
 }
