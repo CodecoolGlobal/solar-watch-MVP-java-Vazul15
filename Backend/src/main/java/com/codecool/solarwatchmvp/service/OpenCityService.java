@@ -8,6 +8,7 @@ import com.codecool.solarwatchmvp.repository.CityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,7 +17,9 @@ import java.util.Optional;
 
 @Service
 public class OpenCityService {
-    private static final String API_KEY = "b491ad43ba62f535b4ce4a9a96195518";
+    @Value("${API_KEYCITY}")
+    private String apiKey;
+
     private final RestTemplate restTemplate;
     private final CityRepository cityRepository;
 
@@ -35,10 +38,10 @@ public class OpenCityService {
     private String buildUrl(String cityName, String stateCode, String countryCode) {
         if (stateCode != null && !stateCode.isEmpty()) {
             return String.format("http://api.openweathermap.org/geo/1.0/direct?q=%s,%s,%s&limit=1&appid=%s",
-                    cityName, stateCode, countryCode, API_KEY);
+                    cityName, stateCode, countryCode, apiKey);
         } else {
             return String.format("http://api.openweathermap.org/geo/1.0/direct?q=%s,%s&limit=1&appid=%s",
-                    cityName, countryCode, API_KEY);
+                    cityName, countryCode, apiKey);
         }
     }
 
